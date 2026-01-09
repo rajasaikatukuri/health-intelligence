@@ -3,8 +3,8 @@ services:
     name: health-intelligence-backend
     env: docker
     region: oregon
-    plan: free
-    dockerfilePath: backend/Dockerfile
+    plan: starter
+    dockerfilePath: ./backend/Dockerfile
     healthCheckPath: /health
     envVars:
       - key: AWS_REGION
@@ -37,7 +37,7 @@ services:
     name: health-intelligence-frontend
     env: node
     region: oregon
-    plan: free
+    plan: starter
     buildCommand: npm install --legacy-peer-deps && npm run build
     startCommand: npm start
     rootDir: ./frontend
@@ -47,3 +47,4 @@ services:
         value: https://health-intelligence-backend.onrender.com
       - key: NODE_ENV
         value: production
+

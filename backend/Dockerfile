@@ -8,14 +8,14 @@ RUN apt-get update && apt-get install -y \
     curl \
     && rm -rf /var/lib/apt/lists/*
 
-# Copy requirements
-COPY requirements.txt .
+# Copy requirements (from backend directory)
+COPY backend/requirements.txt .
 
 # Install Python dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy application code
-COPY . .
+# Copy application code (from backend directory)
+COPY backend/ .
 
 # Create logs directory
 RUN mkdir -p /app/logs
@@ -29,5 +29,6 @@ HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
 
 # Run application
 # Render will set PORT environment variable automatically
-CMD ["python3", "main.py"]
+# Use uvicorn directly for better compatibility with Render
+CMD python3 -m uvicorn main:app --host 0.0.0.0 --port ${PORT:-8000}
 
