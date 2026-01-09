@@ -1,0 +1,84 @@
+# Render Blueprint Configuration
+# Deploy both backend and frontend with a single click
+# https://render.com/docs/blueprint-spec
+
+services:
+  # Backend Service (FastAPI)
+  - type: web
+    name: health-intelligence-backend
+    env: docker
+    region: oregon
+    plan: starter
+    dockerfilePath: ./backend/Dockerfile
+    dockerContext: ./backend
+    healthCheckPath: /health
+    envVars:
+      # AWS Configuration
+      - key: AWS_REGION
+        value: us-east-2
+      - key: ATHENA_DATABASE
+        value: health_data_lake
+      - key: ATHENA_WORKGROUP
+        value: health-data-tenant-queries
+      - key: S3_BUCKET
+        value: health-data-lake-640768199126-us-east-2
+      - key: S3_RESULTS_BUCKET
+        value: health-data-lake-640768199126-us-east-2
+      - key: S3_RESULTS_PREFIX
+        value: athena-results/
+      
+      # LLM Configuration
+      - key: LLM_PROVIDER
+        value: openai
+      - key: OPENAI_MODEL
+        value: gpt-4
+      
+      # Server Configuration
+      - key: HOST
+        value: 0.0.0.0
+      - key: DEBUG
+        value: false
+      
+      # JWT Configuration
+      - key: JWT_ALGORITHM
+        value: HS256
+      - key: JWT_EXPIRATION_HOURS
+        value: 24
+      
+      # CORS - Update after frontend is deployed (set manually in dashboard)
+      # Or use: https://health-intelligence-frontend.onrender.com
+      - key: CORS_ORIGINS
+        sync: false  # Set manually after frontend is deployed
+      
+      # Secrets - Set these in Render Dashboard after creating services
+      # These are placeholders - you MUST set actual values
+      - key: AWS_ACCESS_KEY_ID
+        sync: false  # Set manually in dashboard
+      - key: AWS_SECRET_ACCESS_KEY
+        sync: false  # Set manually in dashboard
+      - key: OPENAI_API_KEY
+        sync: false  # Set manually in dashboard
+      - key: JWT_SECRET
+        generateValue: true  # Generate random secret
+        # Or set manually: openssl rand -hex 32
+
+  # Frontend Service (Next.js)
+  - type: web
+    name: health-intelligence-frontend
+    env: node
+    region: oregon
+    plan: starter
+    buildCommand: npm install --legacy-peer-deps && npm run build
+    startCommand: npm start
+    rootDir: ./frontend
+    healthCheckPath: /
+    envVars:
+      # Backend API URL - Will be set to backend service URL automatically
+      - key: NEXT_PUBLIC_API_URL
+        fromService:
+          type: web
+          name: health-intelligence-backend
+          property: url
+      - key: NODE_ENV
+        value: production
+
