@@ -45,22 +45,17 @@ services:
       - key: JWT_EXPIRATION_HOURS
         value: 24
       
-      # CORS - Update after frontend is deployed (set manually in dashboard)
-      # Or use: https://health-intelligence-frontend.onrender.com
+      # CORS - Set manually after frontend is deployed
+      # Will be updated to actual frontend URL after deployment
       - key: CORS_ORIGINS
-        sync: false  # Set manually after frontend is deployed
+        value: https://health-intelligence-frontend.onrender.com
       
-      # Secrets - Set these in Render Dashboard after creating services
-      # These are placeholders - you MUST set actual values
-      - key: AWS_ACCESS_KEY_ID
-        sync: false  # Set manually in dashboard
-      - key: AWS_SECRET_ACCESS_KEY
-        sync: false  # Set manually in dashboard
-      - key: OPENAI_API_KEY
-        sync: false  # Set manually in dashboard
-      - key: JWT_SECRET
-        generateValue: true  # Generate random secret
-        # Or set manually: openssl rand -hex 32
+      # Secrets - MUST be set manually in Render Dashboard after creating services
+      # These are NOT set in Blueprint - set them in Environment tab
+      # AWS_ACCESS_KEY_ID - Set manually
+      # AWS_SECRET_ACCESS_KEY - Set manually
+      # OPENAI_API_KEY - Set manually
+      # JWT_SECRET - Set manually (generate with: openssl rand -hex 32)
 
   # Frontend Service (Next.js)
   - type: web
@@ -73,12 +68,10 @@ services:
     rootDir: ./frontend
     healthCheckPath: /
     envVars:
-      # Backend API URL - Will be set to backend service URL automatically
+      # Backend API URL - Update with actual backend URL after deployment
+      # Render doesn't support fromService in envVars - set manually after backend deploys
       - key: NEXT_PUBLIC_API_URL
-        fromService:
-          type: web
-          name: health-intelligence-backend
-          property: url
+        value: https://health-intelligence-backend.onrender.com
       - key: NODE_ENV
         value: production
 
