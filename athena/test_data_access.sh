@@ -215,3 +215,4 @@ echo "  python3 ../athena/check_parquet_schema.py"
 echo ""
 
 
+

@@ -160,3 +160,4 @@ def create_fallback_chart(columns: List[str], rows: List[Dict], question: str) -
 
 
 
+

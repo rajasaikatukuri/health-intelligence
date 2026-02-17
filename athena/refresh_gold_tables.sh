@@ -124,3 +124,4 @@ echo "For full refresh, drop and recreate tables using setup_tables.sh"
 
 
 
+

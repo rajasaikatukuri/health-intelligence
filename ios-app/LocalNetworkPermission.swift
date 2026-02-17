@@ -19,3 +19,4 @@ final class LocalNetworkPermission: NSObject, NetServiceBrowserDelegate {
     func netServiceBrowserDidStopSearch(_ browser: NetServiceBrowser) { }
 }
 
+

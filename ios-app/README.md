@@ -81,3 +81,4 @@ private let backendTokenURL = "http://YOUR_MAC_IP:5001/api/auth/health-token"
 
 For detailed setup instructions, see **[IOS_SETUP.md](./IOS_SETUP.md)**
 
+
